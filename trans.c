@@ -3,6 +3,7 @@
 // be placed in the file, and deletes data previously in the file.
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 // clientData structure definition
 struct clientData
 {
@@ -10,7 +11,7 @@ struct clientData
     char lastName[15];    // account last name
     char firstName[10];   // account first name
     double balance;       // account balance
-};                        // end structure clientData
+}; // end structure clientData
 
 // prototypes
 unsigned int enterChoice(void);
@@ -18,6 +19,19 @@ void textFile(FILE *readPtr);
 void updateRecord(FILE *fPtr);
 void newRecord(FILE *fPtr);
 void deleteRecord(FILE *fPtr);
+
+void login()
+{
+    char password[20];
+    printf("Enter admin password: ");
+    scanf("%s", password);
+
+    if (strcmp(password, "admin123") != 0)
+    {
+        printf("Access Denied!\n");
+        exit(0);
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +43,8 @@ int main(int argc, char *argv[])
     {
         printf("%s: File could not be opened.\n", argv[0]);
         exit(-1);
+
+        login();
     }
 
     // enable user to specify action
@@ -57,7 +73,7 @@ int main(int argc, char *argv[])
             puts("Incorrect choice");
             break;
         } // end switch
-    }     // end while
+    } // end while
 
     fclose(cfPtr); // fclose closes the file
 } // end main
@@ -91,10 +107,10 @@ void textFile(FILE *readPtr)
                 fprintf(writePtr, "%-6d%-16s%-11s%10.2f\n", client.acctNum, client.lastName, client.firstName,
                         client.balance);
             } // end if
-        }     // end while
+        } // end while
 
         fclose(writePtr); // fclose closes the file
-    }                     // end else
+    } // end else
 } // end function textFile
 
 // update balance in record
