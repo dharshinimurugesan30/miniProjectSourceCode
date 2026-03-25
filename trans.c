@@ -19,6 +19,7 @@ void textFile(FILE *readPtr);
 void updateRecord(FILE *fPtr);
 void newRecord(FILE *fPtr);
 void deleteRecord(FILE *fPtr);
+void searchRecord(FILE *fPtr);
 
 void login()
 {
@@ -67,6 +68,9 @@ int main(int argc, char *argv[])
         // delete existing record
         case 4:
             deleteRecord(cfPtr);
+            break;
+        case 6:
+            searchRecord(cfPtr);
             break;
         // display if user does not select valid choice
         default:
@@ -182,6 +186,29 @@ void deleteRecord(FILE *fPtr)
     } // end else
 } // end function deleteRecord
 
+void searchRecord(FILE *fPtr)
+{
+    int acc;
+    struct clientData client;
+
+    printf("Enter account number to search: ");
+    scanf("%d", &acc);
+
+    fseek(fPtr, (acc - 1) * sizeof(struct clientData), SEEK_SET);
+    fread(&client, sizeof(struct clientData), 1, fPtr);
+
+    if (client.acctNum == 0)
+    {
+        printf("Account not found\n");
+    }
+    else
+    {
+        printf("%d %s %s %.2f\n",
+               client.acctNum, client.lastName,
+               client.firstName, client.balance);
+    }
+}
+
 // create and insert record
 void newRecord(FILE *fPtr)
 {
@@ -227,7 +254,8 @@ unsigned int enterChoice(void)
                  "2 - update an account\n"
                  "3 - add a new account\n"
                  "4 - delete an account\n"
-                 "5 - end program\n? ");
+                 "5 - end program\n? "
+                 "6 - search account\n");
 
     scanf("%u", &menuChoice); // receive choice from user
     return menuChoice;
